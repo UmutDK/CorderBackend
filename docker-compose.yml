@@ -1,0 +1,47 @@
+# Base de données de développement : docker compose up -d
+# MariaDB 10.6 (version courante sur les hébergements cPanel) + phpMyAdmin sur http://localhost:8081
+# L'API elle-même tourne hors Docker : composer serve (php -S localhost:8000).
+#
+# Au premier démarrage, la base « corder » est créée et database/schema.sql exécuté.
+# Pour repartir de zéro : docker compose down -v
+
+services:
+  db:
+    image: mariadb:10.6
+    container_name: corder-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: corder
+      MARIADB_USER: corder
+      MARIADB_PASSWORD: corder
+      TZ: Europe/Brussels
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    ports:
+      # 3307 côté PC pour ne pas entrer en conflit avec un MySQL de XAMPP sur 3306
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: corder-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

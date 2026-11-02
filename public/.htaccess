@@ -1,0 +1,20 @@
+# API Corder — public_html/api sur cPanel.
+# Toutes les requêtes passent par index.php.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Les réponses de l'API ne sont jamais mises en cache par le navigateur
+  Header always set Cache-Control "no-store"
+</IfModule>

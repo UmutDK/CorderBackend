@@ -1,0 +1,20 @@
+# Dépendances (installées avec composer install)
+/vendor/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Journaux
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Cache du nettoyeur HTML (régénéré automatiquement)
+/storage/cache/
