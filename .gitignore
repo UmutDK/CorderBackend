@@ -6,6 +6,9 @@
 .env.*
 !.env.example
 
+# Images envoyées depuis l'administration (contenu, pas du code)
+/public/uploads/
+
 # Journaux
 /storage/logs/*
 !/storage/logs/.gitkeep

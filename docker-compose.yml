@@ -5,6 +5,10 @@
 # Au premier démarrage, la base « corder » est créée et database/schema.sql exécuté.
 # Pour repartir de zéro : docker compose down -v
 
+# Nom fixe : sans lui, Docker prend le nom du dossier (« backend ») et mélange ce projet
+# avec d'autres projets rangés dans un dossier du même nom
+name: corder
+
 services:
   db:
     image: mariadb:10.6

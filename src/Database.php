@@ -59,4 +59,29 @@ final class Database
         self::run($sql, $params);
         return (int) self::pdo()->lastInsertId();
     }
+
+    /**
+     * Insère ($id null) ou met à jour une ligne à partir d'un tableau colonne => valeur.
+     * Les noms de colonnes viennent toujours du code (jamais de la requête HTTP).
+     */
+    public static function save(string $table, array $data, ?int $id): int
+    {
+        $columns = array_keys($data);
+        if ($id === null) {
+            return self::insert(
+                sprintf(
+                    'INSERT INTO %s (%s) VALUES (%s)',
+                    $table,
+                    implode(', ', $columns),
+                    implode(', ', array_fill(0, count($columns), '?')),
+                ),
+                array_values($data),
+            );
+        }
+        self::run(
+            "UPDATE {$table} SET " . implode(', ', array_map(static fn ($c) => "{$c} = ?", $columns)) . ' WHERE id = ?',
+            [...array_values($data), $id],
+        );
+        return $id;
+    }
 }

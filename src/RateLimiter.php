@@ -11,9 +11,9 @@ use Corder\Http\HttpException;
  */
 final class RateLimiter
 {
-    public static function hit(string $action, string $ip): void
+    public static function hit(string $action, string $ip, ?int $max = null): void
     {
-        $max = Env::int('RATE_LIMIT_PER_HOUR', 5);
+        $max ??= Env::int('RATE_LIMIT_PER_HOUR', 5);
         $hash = hash('sha256', $ip . '|' . Env::get('DB_NAME'));
 
         Database::run('DELETE FROM rate_limits WHERE created_at < ?', [date('Y-m-d H:i:s', time() - 86400)]);

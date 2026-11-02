@@ -30,7 +30,8 @@ final class Request
         }
 
         $body = [];
-        $raw = file_get_contents('php://input');
+        $isJson = str_starts_with(strtolower($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json');
+        $raw = $isJson ? file_get_contents('php://input') : '';
         if ($raw !== false && $raw !== '') {
             $decoded = json_decode($raw, true);
             if (!is_array($decoded)) {

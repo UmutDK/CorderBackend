@@ -86,6 +86,12 @@ final class Validator
         }
     }
 
+    /** Erreur d'une règle propre au contrôleur (unicité, existence en base…) */
+    public function error(string $field, string $message): void
+    {
+        $this->errors[$field] ??= $message;
+    }
+
     public function validate(): void
     {
         if ($this->errors !== []) {

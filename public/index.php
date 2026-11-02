@@ -23,7 +23,7 @@ if (PHP_SAPI === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['REQUEST_U
 $origin = $_SERVER['HTTP_ORIGIN'] ?? null;
 if ($origin !== null && in_array($origin, Env::list('CORS_ORIGINS'), true)) {
     header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type');
     header('Access-Control-Max-Age: 86400');
     header('Vary: Origin');
